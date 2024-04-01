@@ -17,9 +17,20 @@
                         </div>
                         <div class="col-md-6 mb-25">
                             <label for="fuel_type" class="color-dark fs-14 fw-500 align-center">Fuel Type</label>
-                            <input type="text" name="fuel_type"
-                                class="form-control ih-medium ip-gray radius-xs b-light px-15" id="fuel_type"
-                                placeholder="Fuel Type">
+                            <select name="fuel_type" id="fuel_type"
+                                class="form-control ih-medium ip-gray radius-xs b-light px-15">
+                                <option selected>Select fuel type</option>
+                                <option value="Pertalite">Pertalite</option>
+                                <option value="Pertamax">Pertamax</option>
+                                <option value="Pertamax Green">Pertamax Green</option>
+                                <option value="Pertamax Turbo">Pertamax Turbo</option>
+                                <option value="Pertamax Racing">Pertamax Racing</option>
+                                <option value="Shell Super">Shell Super</option>
+                                <option value="Shell V-Power">Shell V-Power</option>
+                                <option value="Shell V-Power Nitro">Shell V-Power Nitro</option>
+                                <option value="Shell V-Power Diesel">Shell V-Power Diesel</option>
+                                <option value="Shell V-Power Diesel Extra">Shell V-Power Diesel Extra</option>
+                            </select>
                         </div>
                         <div class="col-md-6 mb-25">
                             <label for="fuel_price" class="color-dark fs-14 fw-500 align-center">Fuel Price</label>
