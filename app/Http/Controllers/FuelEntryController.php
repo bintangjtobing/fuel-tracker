@@ -64,14 +64,20 @@ class FuelEntryController extends Controller
     public function update(Request $request, $id)
     {
         $validatedData = $request->validate([
-            'fuel_type' => 'required',
-            'fuel_price' => 'required',
-            'fuel_amount' => 'required',
-            'kilometers_traveled' => 'required',
-            'oil_type' => 'required',
-            'oil_name' => 'required',
-            'service_date' => 'required',
+            'fuel_type' => 'sometimes',
+            'fuel_price' => 'sometimes',
+            'fuel_amount' => 'sometimes',
+            'fuel_date' => 'sometimes',
+            'kilometers_traveled' => 'sometimes',
+            'oil_type' => 'sometimes',
+            'oil_name' => 'sometimes',
+            'service_date' => 'sometimes',
         ]);
+
+        // Menghapus tanda "." dari angka sebelum menyimpannya ke database
+        $validatedData['fuel_price'] = str_replace('.', '', $validatedData['fuel_price']);
+        $validatedData['fuel_amount'] = str_replace('.', '', $validatedData['fuel_amount']);
+        $validatedData['kilometers_traveled'] = str_replace('.', '', $validatedData['kilometers_traveled']);
 
         FuelEntry::whereId($id)->update($validatedData);
 

@@ -118,10 +118,12 @@
                                                             method="POST" class="remove">
                                                             @csrf
                                                             @method('DELETE')
-                                                            <a class="remove" type="submit" class="btn-link"
+                                                            <button
+                                                                style="height: 40px;border-radius: 50%;color: #F59191 !important;"
+                                                                type="submit" class="btn btn-link remove"
                                                                 onclick="return confirm('Are you sure you want to delete this entry?')">
                                                                 <span data-feather="trash-2"></span>
-                                                            </a>
+                                                            </button>
                                                         </form>
                                                     </li>
                                                 </ul>
