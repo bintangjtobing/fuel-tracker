@@ -14,8 +14,8 @@ use App\Http\Controllers\FuelEntryController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
-Route::get('/', [DashboardController::class,'index'])->name('home');
+Route::view('/','auth.index');
+Route::get('/dashboard', [DashboardController::class,'index'])->name('home');
 // Route untuk menampilkan semua entri bahan bakar
 Route::get('/fuel-track', [FuelEntryController::class, 'index'])->name('fuel_entries.index');
 

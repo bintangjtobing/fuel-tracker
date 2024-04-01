@@ -2,9 +2,9 @@
 <header class="header-top">
     <nav class="navbar navbar-light">
         <div class="navbar-left">
-            <a href="/" class="sidebar-toggle">
+            <a href="/dashboard" class="sidebar-toggle">
                 <img class="svg" src="{{ asset('img/svg/bars.svg') }}" alt="Logo MileageMaster"></a>
-            <a class="navbar-brand" href="#"><img class="dark" style="max-width: 175px;"
+            <a class="navbar-brand" href="/dashboard"><img class="dark" style="max-width: 175px;"
                     src="{{ asset('img/mileagemaster-logo.png') }}" alt="svg"><img class="light"
                     style="max-width: 175px;" src="{{ asset('img/mileagemaster-logo.png') }}"
                     alt="Logo MileageMaster"></a>
@@ -13,7 +13,7 @@
                 <div class="strikingDash-top-menu position-relative">
                     <ul>
                         <li class="mb-4">
-                            <a href="/" class="{{ request()->is('/') ? 'active' : '' }}">
+                            <a href="/dashboard" class="{{ request()->is('/') ? 'active' : '' }}">
                                 <span data-feather="home" class="nav-icon"></span>
                                 <span class="menu-text">Dashboard</span>
                             </a>

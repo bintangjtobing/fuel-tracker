@@ -6,7 +6,7 @@
                     <span>Main menu</span>
                 </li>
                 <li class="mb-4">
-                    <a href="/" class="{{ request()->is('/') ? 'active' : '' }}">
+                    <a href="/dashboard" class="{{ request()->is('/') ? 'active' : '' }}">
                         <span data-feather="home" class="nav-icon"></span>
                         <span class="menu-text">Dashboard</span>
                     </a>
