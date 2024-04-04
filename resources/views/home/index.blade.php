@@ -80,17 +80,22 @@
     <div class="col-xxl-12 mb-25">
         <div class="card border-0">
             <div class="card-header">
-                <h6 class="fs-24">Fuel & Services Track Activity</h6>
+                <h3><strong>Fuel & Services Track Activity</strong></h3>
+                <div class="action-btn">
+                    <a href="/fuel-track/create" class="btn btn-sm btn-primary d-none d-md-block">
+                        <i class="la la-plus"></i> Add Transactions</a>
+                </div>
             </div>
             <div class="card-body p-2">
                 <div class="table-responsive">
                     <table class="table table-xl mb-0">
                         <thead>
                             <tr class="userDatatable-header" style="font-size: .8rem;">
-                                <th style="padding:0; vertical-align:middle;">Fuel Type</th>
-                                <th style="padding:0; vertical-align:middle;">Fuel Amount</th>
-                                <th style="padding:0; vertical-align:middle;">Service</th>
-                                <th style="padding:0; vertical-align:middle;">Odometer</th>
+                                <th class="py-3 px-0" style="vertical-align:middle;">Fuel Type</th>
+                                <th class="py-3 px-2" style="text-align:right; vertical-align:middle;">Fuel Amount (IDR)
+                                </th>
+                                <th class="py-3 px-0" style="vertical-align:middle;">Service</th>
+                                <th class="py-3 px-0" style="vertical-align:middle; text-align:right;">Odometer (Km)</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -102,7 +107,7 @@
                                             <span class="text-muted">{{ $fuelEntry->fuel_date ?? 'N/A' }}</span>
                                         </div>
                                     </td>
-                                    <td style="vertical-align: middle;">Rp.
+                                    <td style="vertical-align: middle; text-align:right;" class="pr-2">
                                         {{ number_format($fuelEntry->fuel_amount, 2, ',', '.') ?? 'N/A' }} <br>
                                         <span class="text-muted">
                                             @if ($fuelEntry->fuel_price != 0)
@@ -118,8 +123,8 @@
                                         <span class="text-muted">Oil name: {{ $fuelEntry->oil_name ?? 'N/A' }}</span> <br>
                                         <span class="text-muted">Oil type:{{ $fuelEntry->oil_type ?? 'N/A' }}</span>
                                     </td>
-                                    <td style="vertical-align: middle;">
-                                        {{ number_format($fuelEntry->kilometers_traveled, 2, ',', '.') ?? 'N/A' }} KM</td>
+                                    <td style="vertical-align: middle; text-align:right;" class="pr-0">
+                                        {{ number_format($fuelEntry->kilometers_traveled, 2, ',', '.') ?? 'N/A' }}</td>
                                 </tr>
                             @empty
                                 <tr>
@@ -130,6 +135,10 @@
                             @endforelse
                         </tbody>
                     </table>
+                </div>
+                <div class="text-center mt-3 d-md-none">
+                    <a href="/fuel-track/create" class="btn btn-sm btn-primary btn-add btn-block">
+                        <i class="la la-plus"></i> Add Transactions</a>
                 </div>
             </div>
         </div>

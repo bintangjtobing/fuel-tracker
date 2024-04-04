@@ -12,7 +12,7 @@ class DashboardController extends Controller
     public function index()
     {
         // Menghitung jarak isi bensin dari tiap fuel_date
-        $fuelEntriesData = FuelEntry::orderBy('fuel_date', 'desc')->paginate(10);
+        $fuelEntriesData = FuelEntry::orderBy('fuel_date', 'desc')->paginate(5);
         $fuelEntries = FuelEntry::all();
         $totalDistance = 0;
         $totalEntries = $fuelEntries->count();
