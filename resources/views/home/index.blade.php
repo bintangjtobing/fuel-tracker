@@ -80,62 +80,50 @@
     <div class="col-xxl-12 mb-25">
         <div class="card border-0">
             <div class="card-header">
-                <h6 class="fs-14">Fuel & Services Track Activity</h6>
+                <h6 class="fs-24">Fuel & Services Track Activity</h6>
             </div>
-            <div class="card-body p-0">
+            <div class="card-body p-2">
                 <div class="table-responsive">
-                    <table class="table table-sm mb-0">
+                    <table class="table table-xl mb-0">
                         <thead>
-                            <tr class="userDatatable-header">
-                                <th>Fuel Type</th>
-                                <th>Fuel Amount (Rp)</th>
-                                <th>Number of Liters</th>
-                                <th>Service Date</th>
-                                <th>Oil Name</th>
-                                <th>Kilometers Traveled (KM)</th>
+                            <tr class="userDatatable-header" style="font-size: .8rem;">
+                                <th style="padding:0; vertical-align:middle;">Fuel Type</th>
+                                <th style="padding:0; vertical-align:middle;">Fuel Amount</th>
+                                <th style="padding:0; vertical-align:middle;">Service</th>
+                                <th style="padding:0; vertical-align:middle;">Odometer</th>
                             </tr>
                         </thead>
                         <tbody>
                             @forelse ($fuelEntriesData as $fuelEntry)
-                                <tr>
-                                    <td>
-                                        <div class="fw-400 fs-13">{{ $fuelEntry->fuel_type ?? 'N/A' }}</div>
+                                <tr style="font-size: .8rem;">
+                                    <td style="vertical-align: middle;">
+                                        {{ $fuelEntry->fuel_type ?? 'N/A' }} <br>
                                         <div class="text-muted fs-12">Fuels Date:
-                                            <b>{{ $fuelEntry->fuel_date ?? 'N/A' }}</b></div>
+                                            <span class="text-muted">{{ $fuelEntry->fuel_date ?? 'N/A' }}</span>
+                                        </div>
                                     </td>
-                                    <td>
-                                        <div class="fw-400 fs-13">Rp.
-                                            {{ number_format($fuelEntry->fuel_amount, 2, ',', '.') ?? 'N/A' }}</div>
-                                        <div class="text-muted fs-12">Fuels price /L: <b>Rp.
-                                                {{ number_format($fuelEntry->fuel_price, 2, ',', '.') ?? 'N/A' }}</b></div>
-                                    </td>
-                                    <td>
-                                        <div class="fw-400 fs-13">
+                                    <td style="vertical-align: middle;">Rp.
+                                        {{ number_format($fuelEntry->fuel_amount, 2, ',', '.') ?? 'N/A' }} <br>
+                                        <span class="text-muted">
                                             @if ($fuelEntry->fuel_price != 0)
                                                 {{ number_format($fuelEntry->fuel_amount / $fuelEntry->fuel_price, 2, ',', '.') }}
                                                 Liters
                                             @else
                                                 N/A
                                             @endif
-                                        </div>
+                                        </span>
                                     </td>
-                                    <td>
-                                        <div class="fw-400 fs-13">{{ $fuelEntry->service_date ?? 'N/A' }}</div>
+                                    <td style="vertical-align: middle;">{{ $fuelEntry->service_date ?? 'N/A' }}
+                                        <br>
+                                        <span class="text-muted">Oil name: {{ $fuelEntry->oil_name ?? 'N/A' }}</span> <br>
+                                        <span class="text-muted">Oil type:{{ $fuelEntry->oil_type ?? 'N/A' }}</span>
                                     </td>
-                                    <td>
-                                        <div class="fw-400 fs-13">{{ $fuelEntry->oil_name ?? 'N/A' }}</div>
-                                        <div class="text-muted fs-12">Oil Type: <b>{{ $fuelEntry->oil_type ?? 'N/A' }}</b>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="fw-400 fs-13">
-                                            {{ number_format($fuelEntry->kilometers_traveled, 2, ',', '.') ?? 'N/A' }} KM
-                                        </div>
-                                    </td>
+                                    <td style="vertical-align: middle;">
+                                        {{ number_format($fuelEntry->kilometers_traveled, 2, ',', '.') ?? 'N/A' }} KM</td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="text-center">
+                                    <td colspan="4" class="text-center">
                                         <div class="text-muted fs-13">No data available in the database</div>
                                     </td>
                                 </tr>
@@ -146,6 +134,7 @@
             </div>
         </div>
     </div>
+
 
 
 
