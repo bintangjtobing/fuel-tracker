@@ -3,10 +3,10 @@
 @section('content')
     <div class="col-xxl-12 col-12">
         <div class="row">
-            <div class="col-md-3 mb-25">
+            <div class="col-md-3">
                 <div class="forcast-cardbox">
                     <h6 class="forcast-title">Average Distance</h6>
-                    <div class="forcast-details">
+                    <div class="forcast-details" style="margin-bottom:0;">
                         <h1 class="forcast-value">{{ number_format($averageDistance, 2, '.', ',') }} KM</h1>
                         <p class="forcast-status pb-20">
                             <span class="percentage color-success">
@@ -18,49 +18,59 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3 mb-25">
+            <div class="col-md-3">
                 <div class="forcast-cardbox">
                     <h6 class="forcast-title">Cheapest Fuel Price</h6>
-                    <div class="forcast-details">
+                    <div class="forcast-details" style="margin-bottom:0;">
                         <p class="forcast-status mb-0">({{ $cheapestFuel->fuel_type }})</h4>
                         <h1 class="forcast-value">Rp. {{ number_format($cheapestFuel->fuel_price, 2, '.', ',') }}</h1>
-                        <p class="forcast-status">
+                        <p class="forcast-status pb-20">
                             <span class="percentage color-danger">
                                 <span data-feather="arrow-up"></span>
                                 <span>{{ number_format($percentageChangeFuel, 2, '.', ',') }}%</span>
                             </span>
-                            <span class="forcast-text">Since last month</span>
                         </p>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3 mb-25">
+            <div class="col-md-3">
                 <div class="forcast-cardbox">
                     <h6 class="forcast-title">Average Fuel Usage</h6>
-                    <div class="forcast-details">
+                    <div class="forcast-details" style="margin-bottom:0;">
                         <h1 class="forcast-value">{{ number_format($averageFuelUsage, 2, '.', ',') }} Liters</h1>
                         <p class="forcast-status pb-20">
                             <span class="percentage color-success">
                                 <span data-feather="arrow-up"></span>
-                                <span>{{ number_format($percentageChangeCost, 2, '.', ',') }}%</span>
+                                <span>{{ number_format($percentageChangeFuel, 2, '.', ',') }}%</span>
                             </span>
-                            <span class="forcast-text">Since last month</span>
+                            <span class="forcast-text">Over
+                                {{ number_format($averageWeeksBetweenRefueling, 2, '.', ',') }} weeks</span>
                         </p>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3 mb-25">
+            <div class="col-md-3">
                 <div class="forcast-cardbox">
                     <h6 class="forcast-title">Average Total Cost</h6>
-                    <div class="forcast-details">
+                    <div class="forcast-details" style="margin-bottom:0;">
                         <h1 class="forcast-value">Rp. {{ number_format($averageTotalCost, 2, '.', ',') }}</h1>
                         <p class="forcast-status pb-20">
                             <span class="percentage color-danger">
                                 <span data-feather="arrow-up"></span>
                                 <span>{{ number_format($percentageChangeCost, 2, '.', ',') }}%</span>
                             </span>
-                            <span class="forcast-text">Since last month</span>
+                            <span class="forcast-text">Over
+                                {{ number_format($averageWeeksBetweenRefueling, 2, '.', ',') }} weeks</span>
                         </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="forcast-cardbox">
+                    <h6 class="forcast-title">Average Fuel Usage per Day</h6>
+                    <div class="forcast-details pb-20">
+                        <h1 class="forcast-value">{{ number_format($averageFuelUsagePerDay, 2, '.', ',') }} L
+                        </h1>
                     </div>
                 </div>
             </div>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\FuelEntry;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 
 class DashboardController extends Controller
@@ -11,14 +12,47 @@ class DashboardController extends Controller
     public function index()
     {
         // Menghitung jarak isi bensin dari tiap fuel_date
-        $fuelEntriesData = FuelEntry::orderBy('fuel_date','desc')->paginate(10);
+        $fuelEntriesData = FuelEntry::orderBy('fuel_date', 'desc')->paginate(10);
         $fuelEntries = FuelEntry::all();
         $totalDistance = 0;
         $totalEntries = $fuelEntries->count();
+
         foreach ($fuelEntries as $fuelEntry) {
             $totalDistance += $fuelEntry->kilometers_traveled;
         }
         $averageDistance = $totalEntries > 0 ? $totalDistance / $totalEntries : 0;
+
+        // Menghitung jumlah hari antara entri bahan bakar
+        $totalDays = 0;
+        $previousFuelDate = null;
+        foreach ($fuelEntries as $fuelEntry) {
+            $currentFuelDate = Carbon::parse($fuelEntry->fuel_date);
+            if ($previousFuelDate) {
+                $totalDays += $currentFuelDate->diffInDays($previousFuelDate);
+            }
+            $previousFuelDate = $currentFuelDate;
+        }
+
+        // Jumlah hari rata-rata antara entri bahan bakar
+        $averageDaysBetweenRefueling = $totalEntries > 1 ? $totalDays / ($totalEntries - 1) : 0;
+
+        // Konversi jumlah hari rata-rata menjadi jumlah minggu rata-rata
+        $averageWeeksBetweenRefueling = $averageDaysBetweenRefueling / 7;
+
+        // Menghitung rata-rata pemakaian bensin
+        $totalLiters = 0;
+        foreach ($fuelEntries as $fuelEntry) {
+            if ($fuelEntry->fuel_price != 0) {
+                $totalLiters += $fuelEntry->fuel_amount / $fuelEntry->fuel_price;
+            }
+        }
+        $averageFuelUsage = $totalEntries > 0 ? $totalLiters / $totalEntries : 0;
+
+        // Menghitung rata-rata pemakaian bensin per hari
+        $averageFuelUsagePerDay = 0;
+        if ($averageWeeksBetweenRefueling > 0) {
+            $averageFuelUsagePerDay = $averageFuelUsage / ($averageWeeksBetweenRefueling * 7);
+        }
 
         // Mengambil bensin terakhir dan bensin bulan lalu
         $lastFuelEntry = FuelEntry::latest('fuel_date')->first();
@@ -32,15 +66,6 @@ class DashboardController extends Controller
 
         // Mendapatkan bensin termurah
         $cheapestFuel = FuelEntry::orderBy('fuel_price')->first();
-
-        // Menghitung rata-rata pemakaian bensin
-        $totalLiters = 0;
-        foreach ($fuelEntries as $fuelEntry) {
-            if ($fuelEntry->fuel_price != 0) {
-                $totalLiters += $fuelEntry->fuel_amount / $fuelEntry->fuel_price;
-            }
-        }
-        $averageFuelUsage = $totalEntries > 0 ? $totalLiters / $totalEntries : 0;
 
         // Menghitung rata-rata total biaya yang dikeluarkan
         $totalCost = 0;
@@ -65,6 +90,6 @@ class DashboardController extends Controller
             }
         }
 
-        return view('home.index', compact('fuelEntriesData','averageDistance', 'cheapestFuel', 'averageFuelUsage', 'averageTotalCost', 'percentageChangeDistance', 'percentageChangeFuel', 'percentageChangeCost'));
+        return view('home.index', compact('fuelEntriesData', 'averageDistance', 'cheapestFuel', 'averageFuelUsage', 'averageFuelUsagePerDay', 'averageTotalCost', 'percentageChangeDistance', 'percentageChangeFuel', 'percentageChangeCost', 'averageWeeksBetweenRefueling'));
     }
 }
