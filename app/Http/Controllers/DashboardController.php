@@ -3,93 +3,103 @@
 namespace App\Http\Controllers;
 
 use App\Models\FuelEntry;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
-
+use DB;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        // Menghitung jarak isi bensin dari tiap fuel_date
-        $fuelEntriesData = FuelEntry::orderBy('fuel_date', 'desc')->paginate(5);
-        $fuelEntries = FuelEntry::all();
-        $totalDistance = 0;
-        $totalEntries = $fuelEntries->count();
+        // Mengambil data entri bahan bakar yang memiliki fuel_amount tidak sama dengan 0
+        $fuelEntries = FuelEntry::where('fuel_amount', '!=', 0)
+            ->orderByDesc('fuel_date')
+            ->get();
+        $fuelEntriesData = FuelEntry::where('fuel_amount', '!=', 0)
+            ->orderByDesc('fuel_date')
+            ->paginate(5);
 
-        foreach ($fuelEntries as $fuelEntry) {
-            $totalDistance += $fuelEntry->kilometers_traveled;
-        }
+        // Menghitung total jarak dan jumlah entri yang memiliki kilometers_traveled tidak sama dengan 0
+        $totalDistance = $fuelEntries->filter(fn($entry) => $entry->kilometers_traveled != 0)->sum('kilometers_traveled');
+        $totalEntries = $fuelEntries->filter(fn($entry) => $entry->kilometers_traveled != 0)->count();
+
+        // Menghitung rata-rata jarak
         $averageDistance = $totalEntries > 0 ? $totalDistance / $totalEntries : 0;
 
-        // Menghitung jumlah hari antara entri bahan bakar
-        $totalDays = 0;
-        $previousFuelDate = null;
-        foreach ($fuelEntries as $fuelEntry) {
-            $currentFuelDate = Carbon::parse($fuelEntry->fuel_date);
-            if ($previousFuelDate) {
-                $totalDays += $currentFuelDate->diffInDays($previousFuelDate);
-            }
-            $previousFuelDate = $currentFuelDate;
-        }
+        // Menghitung rata-rata penggunaan bensin
+        $averageFuelUsage = $fuelEntries->sum(fn($entry) => $entry->fuel_amount / $entry->fuel_price) / $fuelEntries->count();
 
-        // Jumlah hari rata-rata antara entri bahan bakar
-        $averageDaysBetweenRefueling = $totalEntries > 1 ? $totalDays / ($totalEntries - 1) : 0;
+        // Menghitung jumlah hari rata-rata antara entri bahan bakar
+        $averageDaysBetweenRefueling = $fuelEntries->count() > 1 ? Carbon::parse($fuelEntries->first()->fuel_date)->diffInDays(Carbon::parse($fuelEntries->last()->fuel_date)) / ($fuelEntries->count() - 1) : 0;
 
         // Konversi jumlah hari rata-rata menjadi jumlah minggu rata-rata
         $averageWeeksBetweenRefueling = $averageDaysBetweenRefueling / 7;
 
-        // Menghitung rata-rata pemakaian bensin
-        $totalLiters = 0;
-        foreach ($fuelEntries as $fuelEntry) {
-            if ($fuelEntry->fuel_price != 0) {
-                $totalLiters += $fuelEntry->fuel_amount / $fuelEntry->fuel_price;
-            }
-        }
-        $averageFuelUsage = $totalEntries > 0 ? $totalLiters / $totalEntries : 0;
-
         // Menghitung rata-rata pemakaian bensin per hari
-        $averageFuelUsagePerDay = 0;
-        if ($averageWeeksBetweenRefueling > 0) {
-            $averageFuelUsagePerDay = $averageFuelUsage / ($averageWeeksBetweenRefueling * 7);
-        }
+        $averageFuelUsagePerDay = $averageFuelUsage / ($averageWeeksBetweenRefueling * 7);
 
         // Mengambil bensin terakhir dan bensin bulan lalu
-        $lastFuelEntry = FuelEntry::latest('fuel_date')->first();
+        $lastFuelEntry = $fuelEntries->first();
         $lastMonthFuelEntry = FuelEntry::whereMonth('fuel_date', now()->subMonth())->latest('fuel_date')->first();
 
         // Menghitung persentase perubahan jarak
-        $percentageChangeDistance = 0; // Default value jika tidak ada data sebelumnya
-        if ($lastMonthFuelEntry && $lastMonthFuelEntry->kilometers_traveled != 0) {
-            $percentageChangeDistance = (($lastFuelEntry->kilometers_traveled - $lastMonthFuelEntry->kilometers_traveled) / $lastMonthFuelEntry->kilometers_traveled) * 100;
-        }
+        $percentageChangeDistance = $lastMonthFuelEntry && $lastMonthFuelEntry->kilometers_traveled != 0 ? (($lastFuelEntry->kilometers_traveled - $lastMonthFuelEntry->kilometers_traveled) / $lastMonthFuelEntry->kilometers_traveled) * 100 : 0;
 
         // Mendapatkan bensin termurah
-        $cheapestFuel = FuelEntry::orderBy('fuel_price')->first();
+        $cheapestFuel = FuelEntry::where('fuel_price', '!=', 0)->orderBy('fuel_price')->first();
 
         // Menghitung rata-rata total biaya yang dikeluarkan
-        $totalCost = 0;
-        foreach ($fuelEntries as $fuelEntry) {
-            $totalCost += $fuelEntry->fuel_amount;
-        }
-        $averageTotalCost = $totalEntries > 0 ? $totalCost / $totalEntries : 0;
+        $averageTotalCost = $fuelEntries->sum('fuel_amount') / $fuelEntries->count();
 
         // Menghitung persentase perubahan penggunaan bahan bakar
-        $percentageChangeFuel = 0; // Default value jika tidak ada data sebelumnya
-        if ($lastMonthFuelEntry && $lastMonthFuelEntry->fuel_amount != 0) {
-            $percentageChangeFuel = (($lastFuelEntry->fuel_amount - $lastMonthFuelEntry->fuel_amount) / $lastMonthFuelEntry->fuel_amount) * 100;
-        }
+        $percentageChangeFuel = $lastMonthFuelEntry && $lastMonthFuelEntry->fuel_amount != 0 ? (($lastFuelEntry->fuel_amount - $lastMonthFuelEntry->fuel_amount) / $lastMonthFuelEntry->fuel_amount) * 100 : 0;
 
         // Menghitung persentase perubahan biaya total
-        $percentageChangeCost = 0; // Default value jika tidak ada data sebelumnya
-        if ($lastMonthFuelEntry && $lastMonthFuelEntry->fuel_price != 0) {
-            $previousMonthTotalCost = $lastMonthFuelEntry->fuel_amount * $lastMonthFuelEntry->fuel_price;
-            $currentTotalCost = $lastFuelEntry->fuel_amount * $lastFuelEntry->fuel_price;
-            if ($previousMonthTotalCost != 0) {
-                $percentageChangeCost = (($currentTotalCost - $previousMonthTotalCost) / $previousMonthTotalCost) * 100;
-            }
-        }
+        $percentageChangeCost = $lastMonthFuelEntry && $lastMonthFuelEntry->fuel_price != 0 ? (($lastFuelEntry->fuel_amount * $lastFuelEntry->fuel_price - $lastMonthFuelEntry->fuel_amount * $lastMonthFuelEntry->fuel_price) / ($lastMonthFuelEntry->fuel_amount * $lastMonthFuelEntry->fuel_price)) * 100 : 0;
 
-        return view('home.index', compact('fuelEntriesData', 'averageDistance', 'cheapestFuel', 'averageFuelUsage', 'averageFuelUsagePerDay', 'averageTotalCost', 'percentageChangeDistance', 'percentageChangeFuel', 'percentageChangeCost', 'averageWeeksBetweenRefueling'));
+        // Mengambil data entri layanan
+        $servicesEntriesData = FuelEntry::whereNotNull('service_date')->orderByDesc('service_date')->paginate(5);
+
+        $totalExpenses = Transaction::sum('total_price');
+
+        // Mengambil data entri oli yang memiliki oil_type, oil_name, dan service_date tidak NULL
+        $oilChangeEntries = FuelEntry::whereNotNull('oil_type')
+        ->whereNotNull('oil_name')
+        ->whereNotNull('service_date')
+        ->orderByDesc('service_date')
+        ->get();
+
+        // Menghitung jumlah entri oli yang memenuhi kondisi tersebut
+        $totalOilChangeEntries = $oilChangeEntries->count();
+
+        // Menghitung rata-rata jumlah hari antara entri oli
+        $averageDaysBetweenOilChanges = $totalOilChangeEntries > 1 ? $oilChangeEntries->avg(function ($entry) {
+        return Carbon::parse($entry->service_date)->diffInDays($entry->service_date->addMonths(3));
+        }) : 0;
+
+        // Konversi jumlah hari rata-rata menjadi jumlah minggu rata-rata
+        $averageWeeksBetweenOilChanges = $averageDaysBetweenOilChanges / 7;
+
+        // Menghitung rata-rata jarak tempuh per pengisian bahan bakar
+        $averageDistancePerRefuel = DB::table('fuel_entries')
+        ->select(DB::raw('AVG(kilometers_traveled) as average_distance'))
+        ->where('fuel_amount', '!=', 0)
+        ->first()->average_distance ?? 0;
+
+        // Pengaturan untuk grafik tren penggunaan bahan bakar
+        $fuelUsageTrend = FuelEntry::select(DB::raw("DATE_FORMAT(fuel_date, '%Y-%m') as month"), DB::raw("SUM(fuel_amount) as total_fuel"))
+            ->groupBy(DB::raw("DATE_FORMAT(fuel_date, '%Y-%m')"))
+            ->orderBy('month')
+            ->get();
+
+        // Pengaturan untuk grafik tren frekuensi layanan
+        $serviceFrequencyTrend = FuelEntry::whereNotNull('service_date')
+            ->select(DB::raw("DATE_FORMAT(service_date, '%Y-%m') as month"), DB::raw("COUNT(*) as service_count"))
+            ->groupBy(DB::raw("DATE_FORMAT(service_date, '%Y-%m')"))
+            ->orderBy('month')
+            ->get();
+
+        return view('home.index', compact('fuelEntries','fuelEntriesData', 'averageDistance', 'cheapestFuel', 'averageFuelUsage', 'averageFuelUsagePerDay', 'averageTotalCost', 'percentageChangeDistance', 'percentageChangeFuel', 'percentageChangeCost', 'averageWeeksBetweenRefueling', 'servicesEntriesData','totalExpenses','averageDaysBetweenOilChanges','averageWeeksBetweenOilChanges', 'averageDistancePerRefuel','fuelUsageTrend', 'serviceFrequencyTrend'));
     }
 }

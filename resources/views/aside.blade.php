@@ -20,6 +20,12 @@
                         <span class="menu-text">Fuel Track</span>
                     </a>
                 </li>
+                <li>
+                    <a href="/transactions" class="{{ request()->is('transactions*') ? 'active' : '' }}">
+                        <span data-feather="shopping-cart" class="nav-icon"></span>
+                        <span class="menu-text">Transactions</span>
+                    </a>
+                </li>
             </ul>
         </div>
     </div>

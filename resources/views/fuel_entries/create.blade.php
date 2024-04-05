@@ -1,13 +1,13 @@
 @extends('welcome')
 @section('title', 'New Track Activities')
 @section('content')
-    <div class="col-lg-8">
+    <div class="col-lg-12">
         <div class="card card-Vertical card-default card-md mb-4">
             <div class="card-body pb-md-30">
                 <form action="{{ route('fuel_entries.store') }}" method="POST">
                     @csrf
                     <div class="row">
-                        <div class="card-header">
+                        <div class="col-md-12 my-25 card-header">
                             <h6>New Track Fuel</h6>
                         </div>
                         <div class="col-md-12 mb-25 mt-25">

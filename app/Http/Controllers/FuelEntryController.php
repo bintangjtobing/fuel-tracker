@@ -9,8 +9,9 @@ class FuelEntryController extends Controller
 {
     public function index()
     {
-        $fuelEntries = FuelEntry::orderBy('fuel_date','desc')->paginate(10);
-    return view('fuel_entries.index', ['fuelEntries' => $fuelEntries]);
+        $fuelEntries = FuelEntry::orderByRaw('IFNULL(fuel_date, service_date) DESC')->paginate(10);
+        return view('fuel_entries.index', ['fuelEntries' => $fuelEntries]);
+
     // return response()->json($fuelEntries);
     }
 
@@ -35,9 +36,9 @@ class FuelEntryController extends Controller
     ]);
 
     // Menghapus tanda "." dari angka sebelum menyimpannya ke database
-    $validatedData['fuel_price'] = str_replace('.', '', $validatedData['fuel_price']);
-    $validatedData['fuel_amount'] = str_replace('.', '', $validatedData['fuel_amount']);
-    $validatedData['kilometers_traveled'] = str_replace('.', '', $validatedData['kilometers_traveled']);
+    $validatedData['fuel_price'] = str_replace('.', '', $validatedData['fuel_price']) ?? '0';
+    $validatedData['fuel_amount'] = str_replace('.', '', $validatedData['fuel_amount']) ?? '0';
+    $validatedData['kilometers_traveled'] = str_replace('.', '', $validatedData['kilometers_traveled']) ?? '0';
 
     FuelEntry::create($validatedData);
 
@@ -75,9 +76,9 @@ class FuelEntryController extends Controller
         ]);
 
         // Menghapus tanda "." dari angka sebelum menyimpannya ke database
-        $validatedData['fuel_price'] = str_replace('.', '', $validatedData['fuel_price']);
-        $validatedData['fuel_amount'] = str_replace('.', '', $validatedData['fuel_amount']);
-        $validatedData['kilometers_traveled'] = str_replace('.', '', $validatedData['kilometers_traveled']);
+        $validatedData['fuel_price'] = str_replace('.', '', $validatedData['fuel_price']) ?? '0';
+        $validatedData['fuel_amount'] = str_replace('.', '', $validatedData['fuel_amount']) ?? '0';
+        $validatedData['kilometers_traveled'] = str_replace('.', '', $validatedData['kilometers_traveled']) ?? '0';
 
         FuelEntry::whereId($id)->update($validatedData);
 

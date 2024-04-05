@@ -16,4 +16,7 @@ class FuelEntry extends Model
         'fuel_amount' => 'integer',
         'kilometers_traveled' => 'integer'
     ];
+    protected $dates = [
+        'fuel_date',
+    ];
 }
