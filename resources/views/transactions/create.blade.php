@@ -47,15 +47,15 @@
                         </div>
                         <div class="col-md-6 mb-25">
                             <label for="unit_price" class="color-dark fs-14 fw-500 align-center">Unit Price</label>
-                            <input type="number" name="unit_price"
+                            <input type="text" name="unit_price"
                                 class="form-control ih-medium ip-gray radius-xs b-light px-15 decimal-input" id="unit_price"
-                                placeholder="Unit Price" min="0">
+                                placeholder="Unit Price">
                         </div>
                         <div class="col-md-6 mb-25">
                             <label for="discount_price" class="color-dark fs-14 fw-500 align-center">Discount Price</label>
-                            <input type="number" name="discount_price"
+                            <input type="text" name="discount_price"
                                 class="form-control ih-medium ip-gray radius-xs b-light px-15 decimal-input"
-                                id="discount_price" placeholder="Discount Price" min="0">
+                                id="discount_price" placeholder="Discount Price">
                         </div>
                         <div class="col-md-6 mb-25">
                             <div class="layout-button mt-25">
