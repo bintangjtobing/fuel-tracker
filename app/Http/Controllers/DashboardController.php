@@ -73,10 +73,14 @@ class DashboardController extends Controller
         // Menghitung jumlah entri oli yang memenuhi kondisi tersebut
         $totalOilChangeEntries = $oilChangeEntries->count();
 
-        // Menghitung rata-rata jumlah hari antara entri oli
         $averageDaysBetweenOilChanges = $totalOilChangeEntries > 1 ? $oilChangeEntries->avg(function ($entry) {
-        return Carbon::parse($entry->service_date)->diffInDays($entry->service_date->addMonths(3));
+            // Menghitung tanggal tiga bulan setelah tanggal layanan
+            $nextServiceDate = Carbon::parse($entry->service_date)->addMonths(3);
+
+            // Mengembalikan selisih dalam jumlah hari antara tanggal layanan dan tanggal layanan berikutnya
+            return Carbon::parse($entry->service_date)->diffInDays($nextServiceDate);
         }) : 0;
+
 
         // Konversi jumlah hari rata-rata menjadi jumlah minggu rata-rata
         $averageWeeksBetweenOilChanges = $averageDaysBetweenOilChanges / 7;
