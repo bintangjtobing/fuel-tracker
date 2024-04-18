@@ -81,9 +81,19 @@
                     </div>
                 </div>
             </div>
+            <!-- Kartu Rata-rata Interval Antara Pergantian Oli -->
+            <div class="col-md-4">
+                <div class="forcast-cardbox">
+                    <h6 class="forcast-title">Average Interval Between Oil Changes</h6>
+                    <div class="forcast-details pb-20">
+                        <h1 class="forcast-value">{{ number_format($averageDaysBetweenOilChanges, 2, '.', ',') }} Days
+                        </h1>
+                    </div>
+                </div>
+            </div>
 
             <!-- Kartu Total Biaya untuk Layanan -->
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <div class="forcast-cardbox">
                     <h6 class="forcast-title">Total Expenses for Service</h6>
                     <div class="forcast-details pb-20">
@@ -93,22 +103,11 @@
                 </div>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <div class="forcast-cardbox">
                     <h6 class="forcast-title">Total Expenses for Fuel</h6>
                     <div class="forcast-details pb-20">
                         <h1 class="forcast-value">Rp. {{ number_format($totalFuelAmount, 2, '.', ',') }}
-                        </h1>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Kartu Rata-rata Interval Antara Pergantian Oli -->
-            <div class="col-md-4">
-                <div class="forcast-cardbox">
-                    <h6 class="forcast-title">Average Interval Between Oil Changes</h6>
-                    <div class="forcast-details pb-20">
-                        <h1 class="forcast-value">{{ number_format($averageDaysBetweenOilChanges, 2, '.', ',') }} Days
                         </h1>
                     </div>
                 </div>
