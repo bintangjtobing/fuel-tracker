@@ -24,8 +24,22 @@ class DashboardController extends Controller
         $totalDistance = $fuelEntries->filter(fn($entry) => $entry->kilometers_traveled != 0)->sum('kilometers_traveled');
         $totalEntries = $fuelEntries->filter(fn($entry) => $entry->kilometers_traveled != 0)->count();
 
-        // Menghitung rata-rata jarak
-        $averageDistance = $totalEntries > 0 ? $totalDistance / $totalEntries : 0;
+// Menghitung rata-rata jarak per pengisian bahan bakar
+        $averageDistancePerRefuel = 0;
+        if ($totalEntries > 1) { // Mengubah $totalEntriesWithDistance menjadi $totalEntries
+            // Mengurutkan entri bahan bakar berdasarkan tanggal
+            $sortedFuelEntries = $fuelEntries->sortBy('fuel_date');
+
+            // Menghitung rata-rata jarak per pengisian bahan bakar
+            $totalDistancePerRefuel = 0;
+            for ($i = 1; $i < $sortedFuelEntries->count(); $i++) {
+                $distanceBetweenRefuels = $sortedFuelEntries[$i]->kilometers_traveled - $sortedFuelEntries[$i - 1]->kilometers_traveled;
+                $totalDistancePerRefuel += $distanceBetweenRefuels;
+            }
+
+            $averageDistancePerRefuel = $totalDistancePerRefuel / ($sortedFuelEntries->count() - 1);
+        }
+
 
         // Menghitung rata-rata penggunaan bensin
         $averageFuelUsage = $fuelEntries->sum(fn($entry) => $entry->fuel_amount / $entry->fuel_price) / $fuelEntries->count();
@@ -43,8 +57,12 @@ class DashboardController extends Controller
         $lastFuelEntry = $fuelEntries->first();
         $lastMonthFuelEntry = FuelEntry::whereMonth('fuel_date', now()->subMonth())->latest('fuel_date')->first();
 
-        // Menghitung persentase perubahan jarak
-        $percentageChangeDistance = $lastMonthFuelEntry && $lastMonthFuelEntry->kilometers_traveled != 0 ? (($lastFuelEntry->kilometers_traveled - $lastMonthFuelEntry->kilometers_traveled) / $lastMonthFuelEntry->kilometers_traveled) * 100 : 0;
+        // Mengambil entri bahan bakar terakhir dan sebelumnya berdasarkan tanggal entri
+        $lastFuelEntry = $fuelEntries->first();
+        $previousFuelEntry = $fuelEntries->skip(1)->first();
+
+        // Menghitung persentase perubahan jarak berdasarkan entri terakhir dan sebelumnya
+        $percentageChangeDistance = $previousFuelEntry ? (($lastFuelEntry->kilometers_traveled - $previousFuelEntry->kilometers_traveled) / $previousFuelEntry->kilometers_traveled) * 100 : 0;
 
         // Mendapatkan bensin termurah
         $cheapestFuel = FuelEntry::where('fuel_price', '!=', 0)->orderBy('fuel_price')->first();
@@ -104,6 +122,6 @@ class DashboardController extends Controller
             ->orderBy('month')
             ->get();
 
-        return view('home.index', compact('fuelEntries','fuelEntriesData', 'averageDistance', 'cheapestFuel', 'averageFuelUsage', 'averageFuelUsagePerDay', 'averageTotalCost', 'percentageChangeDistance', 'percentageChangeFuel', 'percentageChangeCost', 'averageWeeksBetweenRefueling', 'servicesEntriesData','totalExpenses','averageDaysBetweenOilChanges','averageWeeksBetweenOilChanges', 'averageDistancePerRefuel','fuelUsageTrend', 'serviceFrequencyTrend'));
+        return view('home.index', compact('fuelEntries','fuelEntriesData', 'averageDistance', 'cheapestFuel', 'averageFuelUsage', 'averageDistancePerRefuel', 'averageFuelUsagePerDay', 'averageTotalCost', 'percentageChangeDistance', 'percentageChangeFuel', 'percentageChangeCost', 'averageWeeksBetweenRefueling', 'servicesEntriesData','totalExpenses','averageDaysBetweenOilChanges','averageWeeksBetweenOilChanges', 'averageDistancePerRefuel','fuelUsageTrend', 'serviceFrequencyTrend'));
     }
 }

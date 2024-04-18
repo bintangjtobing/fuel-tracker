@@ -8,7 +8,7 @@
                 <div class="forcast-cardbox">
                     <h6 class="forcast-title">Average Distance Traveled</h6>
                     <div class="forcast-details" style="margin-bottom:0;">
-                        <h1 class="forcast-value">{{ number_format($averageDistance, 2, '.', ',') }} KM</h1>
+                        <h1 class="forcast-value">{{ number_format($averageDistancePerRefuel, 2, '.', ',') }} KM</h1>
                         <p class="forcast-status pb-20">
                             <span class="percentage color-success">
                                 <span data-feather="arrow-up"></span>
