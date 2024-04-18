@@ -20,6 +20,9 @@ class DashboardController extends Controller
             ->orderByDesc('fuel_date')
             ->paginate(5);
 
+        // Menghitung total jumlah fuel_amount
+        $totalFuelAmount = $fuelEntries->sum('fuel_amount');
+
         // Menghitung total jarak dan jumlah entri yang memiliki kilometers_traveled tidak sama dengan 0
         $totalDistance = $fuelEntries->filter(fn($entry) => $entry->kilometers_traveled != 0)->sum('kilometers_traveled');
         $totalEntries = $fuelEntries->filter(fn($entry) => $entry->kilometers_traveled != 0)->count();
@@ -122,6 +125,6 @@ class DashboardController extends Controller
             ->orderBy('month')
             ->get();
 
-        return view('home.index', compact('fuelEntries','fuelEntriesData',  'cheapestFuel', 'averageFuelUsage', 'averageDistancePerRefuel', 'averageFuelUsagePerDay', 'averageTotalCost', 'percentageChangeDistance', 'percentageChangeFuel', 'percentageChangeCost', 'averageWeeksBetweenRefueling', 'servicesEntriesData','totalExpenses','averageDaysBetweenOilChanges','averageWeeksBetweenOilChanges', 'averageDistancePerRefuel','fuelUsageTrend', 'serviceFrequencyTrend'));
+        return view('home.index', compact('fuelEntries','fuelEntriesData',  'cheapestFuel', 'averageFuelUsage', 'averageDistancePerRefuel', 'averageFuelUsagePerDay', 'averageTotalCost', 'percentageChangeDistance', 'percentageChangeFuel', 'percentageChangeCost', 'averageWeeksBetweenRefueling', 'servicesEntriesData','totalExpenses','averageDaysBetweenOilChanges','averageWeeksBetweenOilChanges', 'averageDistancePerRefuel','fuelUsageTrend','totalFuelAmount', 'serviceFrequencyTrend'));
     }
 }

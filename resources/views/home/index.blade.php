@@ -20,16 +20,6 @@
                 </div>
             </div>
 
-            <!-- Kartu Rata-rata Jarak per Pengisian Bahan Bakar -->
-            <div class="col-md-4">
-                <div class="forcast-cardbox">
-                    <h6 class="forcast-title">Average Distance Per Refuel</h6>
-                    <div class="forcast-details" style="margin-bottom:0;">
-                        <h1 class="forcast-value pb-20">{{ number_format($averageDistancePerRefuel, 2, '.', ',') }} KM</h1>
-                    </div>
-                </div>
-            </div>
-
             <!-- Kartu Harga Bahan Bakar Termurah -->
             <div class="col-md-4">
                 <div class="forcast-cardbox">
@@ -98,6 +88,16 @@
                     <h6 class="forcast-title">Total Expenses for Service</h6>
                     <div class="forcast-details pb-20">
                         <h1 class="forcast-value">Rp. {{ number_format($totalExpenses, 2, '.', ',') }}
+                        </h1>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="forcast-cardbox">
+                    <h6 class="forcast-title">Total Expenses for Fuel</h6>
+                    <div class="forcast-details pb-20">
+                        <h1 class="forcast-value">Rp. {{ number_format($totalFuelAmount, 2, '.', ',') }}
                         </h1>
                     </div>
                 </div>
