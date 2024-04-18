@@ -122,6 +122,6 @@ class DashboardController extends Controller
             ->orderBy('month')
             ->get();
 
-        return view('home.index', compact('fuelEntries','fuelEntriesData', 'averageDistance', 'cheapestFuel', 'averageFuelUsage', 'averageDistancePerRefuel', 'averageFuelUsagePerDay', 'averageTotalCost', 'percentageChangeDistance', 'percentageChangeFuel', 'percentageChangeCost', 'averageWeeksBetweenRefueling', 'servicesEntriesData','totalExpenses','averageDaysBetweenOilChanges','averageWeeksBetweenOilChanges', 'averageDistancePerRefuel','fuelUsageTrend', 'serviceFrequencyTrend'));
+        return view('home.index', compact('fuelEntries','fuelEntriesData',  'cheapestFuel', 'averageFuelUsage', 'averageDistancePerRefuel', 'averageFuelUsagePerDay', 'averageTotalCost', 'percentageChangeDistance', 'percentageChangeFuel', 'percentageChangeCost', 'averageWeeksBetweenRefueling', 'servicesEntriesData','totalExpenses','averageDaysBetweenOilChanges','averageWeeksBetweenOilChanges', 'averageDistancePerRefuel','fuelUsageTrend', 'serviceFrequencyTrend'));
     }
 }
